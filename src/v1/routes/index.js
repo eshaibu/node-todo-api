@@ -7,7 +7,14 @@ const routes = (router) => {
     });
   });
 
-  router.route('/todos').post(todoController.create);
+  router.param('id', todoController.id);
+
+  router
+    .route('/todos')
+    .get(todoController.list)
+    .post(todoController.create);
+
+  router.route('/todos/:id').get(todoController.get);
 };
 
 export default routes;

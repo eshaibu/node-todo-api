@@ -13,14 +13,20 @@ const app = request(server);
 jsLogger.info(`${process.env.NODE_ENV} >>>>>`);
 
 describe('TODO API', () => {
+  let todoId = '';
+  const titleTest = 'title test1';
+  const descriptionTest = 'description test1';
   /**
    * Function to run before test begins
    */
   before((done) => {
     Todo.create({
-      title: 'title test1',
-      description: 'title description1',
-    }).then(() => done());
+      title: titleTest,
+      description: descriptionTest,
+    }).then((result) => {
+      todoId = result._id; // eslint-disable-line
+      done();
+    });
   });
 
   /**
@@ -77,6 +83,95 @@ describe('TODO API', () => {
       app
         .post('/api/v1/todos')
         .send({ title: 'title1', description: 'description1' })
+        .expect(500)
+        .end((err) => {
+          if (err) return done(err);
+          done();
+          sandbox.restore();
+        });
+    });
+  });
+
+  describe('GET TODO', () => {
+    it('should return todo item for item id present in db', (done) => {
+      app
+        .get(`/api/v1/todos/${todoId}`)
+        .expect(200)
+        .end((err, response) => {
+          if (err) return done(err);
+          const { body: result } = response;
+          expect(result.title).to.equal(titleTest);
+          expect(result.description).to.equal(descriptionTest);
+          done();
+        });
+    });
+
+    it('should return 404 if item id not present in db', (done) => {
+      app
+        .get('/api/v1/todos/1234')
+        .expect(404)
+        .end((err, response) => {
+          if (err) return done(err);
+          const { body: result } = response;
+          expect(result.message).to.equal('Todo item with not found');
+          done();
+        });
+    });
+
+    it('should return paginated list of action items', (done) => {
+      app
+        .get('/api/v1/todos')
+        .expect(200)
+        .end((err, response) => {
+          if (err) return done(err);
+          const { body: result } = response;
+          expect(result)
+            .to.have.property('paginationMeta')
+            .which.is.an.instanceOf(Object);
+          expect(result.paginationMeta).to.have.property('pageSize');
+          expect(result.paginationMeta).to.have.property('currentPage');
+          expect(result)
+            .to.have.property('todos')
+            .which.is.an('array');
+          done();
+        });
+    });
+
+    it('should return paginated list action items with limit per page of the limit query', (done) => {
+      app
+        .get('/api/v1/todos?limit=1')
+        .expect(200)
+        .end((err, response) => {
+          if (err) return done(err);
+          const { body: result } = response;
+          expect(result.paginationMeta).to.have.property('pageSize');
+          expect(result.paginationMeta.pageSize).to.equal(1);
+          done();
+        });
+    });
+
+    it('should return error when mongoose fails to fetch todo item', (done) => {
+      const sandbox = sinon.createSandbox();
+      const createStub = sandbox.stub(Todo, 'findById');
+      createStub.throws({});
+      app
+        .get(`/api/v1/todos/${todoId}`)
+        .expect(500)
+        .end((err) => {
+          if (err) {
+            return done(err);
+          }
+          done();
+          sandbox.restore();
+        });
+    });
+
+    it('should return error when mongoose fails to list todo items', (done) => {
+      const sandbox = sinon.createSandbox();
+      const createStub = sandbox.stub(Todo, 'find');
+      createStub.throws({});
+      app
+        .get('/api/v1/todos')
         .expect(500)
         .end((err) => {
           if (err) return done(err);

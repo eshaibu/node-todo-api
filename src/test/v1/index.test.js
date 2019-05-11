@@ -1,12 +1,9 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
 import request from 'supertest';
-import jsLogger from 'js-logger';
 import server from '../../index';
 
 const app = request(server);
-
-jsLogger.info(`${process.env.NODE_ENV} >>>>>`);
 
 describe('GENERAL ROUTE', () => {
   it('should return 404 if route not found', (done) => {
