@@ -7,6 +7,7 @@ import cors from 'cors';
 import jsLogger from 'js-logger';
 
 import config from './v1/config/index';
+import dbConnect from './v1/utils/db-connect';
 import routes from './v1/routes/index';
 
 jsLogger.useDefaults();
@@ -26,6 +27,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(cors());
+
+// connect to database
+dbConnect();
 
 routes(router);
 
