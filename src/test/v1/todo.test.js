@@ -2,7 +2,6 @@ import { expect } from 'chai';
 import { describe, it, after, before } from 'mocha';
 import request from 'supertest';
 import sinon from 'sinon';
-// import 'sinon-mongoose';
 import jsLogger from 'js-logger';
 
 import server from '../../index';
@@ -237,6 +236,47 @@ describe('TODO API', () => {
           if (err) return done(err);
           done();
           sandbox.restore();
+        });
+    });
+  });
+
+  describe('DELETE TODO', () => {
+    it('should return error when mongoose fails to fetch delete item', (done) => {
+      const sandbox = sinon.createSandbox();
+      const createStub = sandbox.stub(Todo.prototype, 'deleteOne');
+      createStub.throws({});
+      app
+        .delete(`/api/v1/todos/${todoId}`)
+        .expect(500)
+        .end((err) => {
+          if (err) {
+            return done(err);
+          }
+          done();
+          sandbox.restore();
+        });
+    });
+    it('should remove todo item if item id present in db', (done) => {
+      app
+        .delete(`/api/v1/todos/${todoId}`)
+        .expect(200)
+        .end((err, response) => {
+          if (err) return done(err);
+          const { body: result } = response;
+          expect(result.message).to.equal('Todo item successfully deleted');
+          done();
+        });
+    });
+
+    it('should return 404 if item id not present in db', (done) => {
+      app
+        .delete(`/api/v1/todos/${todoId}`)
+        .expect(404)
+        .end((err, response) => {
+          if (err) return done(err);
+          const { body: result } = response;
+          expect(result.message).to.equal('Todo item with not found');
+          done();
         });
     });
   });

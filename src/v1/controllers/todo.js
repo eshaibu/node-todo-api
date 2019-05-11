@@ -156,4 +156,22 @@ export default class Todos {
       });
     }
   }
+
+  /**
+   * Delete one todo_resource
+   * @param {Object} req - request parameter
+   * @param {Object} res - response parameter
+   * @param {function} next The callback to the next program handler
+   * @returns {Object} - returned response object
+   */
+  static async remove(req, res, next) {
+    try {
+      await req.todo.deleteOne();
+      return res.status(200).json({
+        message: 'Todo item successfully deleted',
+      });
+    } catch (error) {
+      return next(error);
+    }
+  }
 }
