@@ -8,6 +8,7 @@ import jsLogger from 'js-logger';
 
 import config from './v1/config/index';
 import dbConnect from './v1/utils/db-connect';
+import errorHandler from './v1/utils/error-handler';
 import routes from './v1/routes/index';
 
 jsLogger.useDefaults();
@@ -44,6 +45,9 @@ app.use('/api/v1', router);
 app.get('*', (req, res) => res.status(404).send({
   message: 'This route does not exist. Visit /api/v1/**',
 }));
+
+// app error handler
+app.use(errorHandler);
 
 // Create server
 const server = http.createServer(app);

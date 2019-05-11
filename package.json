@@ -9,7 +9,7 @@
     "dev": "nodemon --exec babel-node src/index.js",
     "dev:lint": "nodemon src/index.js --exec \"npm run lint:watch && babel-node\"",
     "pretest": "export NODE_ENV=test && npm run lint:watch",
-    "test:api": "export NODE_ENV=test && nyc --reporter=html mocha --opts ./src/test/utils/mocha.opts ./src/test/v1/index.test.js --exit",
+    "test:api": "export NODE_ENV=test && nyc --reporter=html mocha --opts ./src/test/utils/mocha.opts ./src/test/v1/*.test.js --exit",
     "test": "npm run test:api && nyc report",
     "lint:watch": "esw src",
     "lint:fix": "eslint 'src/**/*.js' --fix",
@@ -58,6 +58,8 @@
     "nodemon": "^1.19.0",
     "nyc": "^14.1.1",
     "prettier-eslint-cli": "^4.7.1",
+    "sinon": "^7.3.2",
+    "sinon-mongoose": "^2.3.0",
     "supertest": "^4.0.2"
   },
   "dependencies": {
