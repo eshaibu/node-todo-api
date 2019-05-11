@@ -1,0 +1,41 @@
+{
+  "name": "node-todo-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm run build:server && node ./dist/index.js",
+    "build:server": "npx babel src/ --out-dir dist/",
+    "dev": "nodemon --exec babel-node src/index.js"
+  },
+  "engines": {
+    "node": ">= 8.11.4",
+    "npm": ">= 5.6.0"
+  },
+  "keywords": [
+    "Express",
+    "RestAPI",
+    "MongoDB",
+    "Mongoose",
+    "Todo"
+  ],
+  "author": "Shaibu Emmanuel <emmanueltemitopeshaibu@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.4",
+    "@babel/node": "^7.2.2",
+    "@babel/polyfill": "^7.4.4",
+    "@babel/preset-env": "^7.4.4",
+    "@babel/register": "^7.4.4",
+    "nodemon": "^1.19.0"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "express": "^4.16.4",
+    "js-logger": "^1.6.0",
+    "morgan": "^1.9.1"
+  }
+}
