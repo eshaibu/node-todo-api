@@ -11,6 +11,7 @@
     "comma-dangle": ["error", "always-multiline"],
     "consistent-return": "off",
     "object-curly-newline": "off",
+    "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "valid-jsdoc": ["warn" , {
       "requireReturn": true,
       "requireReturnType": true,

@@ -1,7 +1,7 @@
 const routes = (router) => {
   router.get('/', (req, res) => {
     res.json({
-      status: 'Welcome to V1 API',
+      message: 'Welcome to V1 API',
     });
   });
 };
