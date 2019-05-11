@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-const { NODE_ENV, BASE_URL, DB_URL, TEST_DB_URL, PORT } = process.env;
+const { NODE_ENV, PORT } = process.env;
 
 const config = {
   development: {

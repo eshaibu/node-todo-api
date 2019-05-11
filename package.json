@@ -6,7 +6,26 @@
   "scripts": {
     "start": "npm run build:server && node ./dist/index.js",
     "build:server": "npx babel src/ --out-dir dist/",
-    "dev": "nodemon --exec babel-node src/index.js"
+    "dev": "nodemon --exec babel-node src/index.js",
+    "dev:lint": "nodemon src/index.js --exec \"npm run lint:watch && babel-node\"",
+    "pretest": "export NODE_ENV=test && npm run lint:watch",
+    "test:api": "export NODE_ENV=test && nyc --reporter=html mocha --opts ./src/test/utils/mocha.opts ./src/test/index.test.js --exit",
+    "test": "npm run test:api && nyc report",
+    "lint:watch": "esw src",
+    "lint:fix": "eslint 'src/**/*.js' --fix",
+    "format": "prettier-eslint 'src/**/*.{js,json}' --write",
+    "check:lint": "prettier-eslint --list-different \"src/**/*.{js,json}\""
+  },
+  "lint-staged": {
+    "**/*.js": [
+      "prettier-eslint --write \"src/**/*.{js,json}\"",
+      "git add"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   },
   "engines": {
     "node": ">= 8.11.4",
@@ -28,7 +47,14 @@
     "@babel/polyfill": "^7.4.4",
     "@babel/preset-env": "^7.4.4",
     "@babel/register": "^7.4.4",
-    "nodemon": "^1.19.0"
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.17.2",
+    "eslint-watch": "^5.1.2",
+    "husky": "^2.2.0",
+    "lint-staged": "^8.1.6",
+    "nodemon": "^1.19.0",
+    "prettier-eslint-cli": "^4.7.1"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
