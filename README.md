@@ -11,4 +11,5 @@ Check the default environment variables in config folder on the directory `src/v
 
 * Install dependencies => `npm install`
 * Start the application in development environment with command `npm run dev` and `npm start` for production environment
+* To run test run `npm test`
 

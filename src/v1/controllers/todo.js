@@ -10,14 +10,14 @@ export default class Todos {
    * @param {Object} req - request parameter
    * @param {Object} res - The response object
    * @param {object} next - The callback to the next program handler
-   * @param {String} id - The id from the url parameter
+   * @param {String} todoId - The id from the url parameter
    * @return {Object} res
    */
-  static async id(req, res, next, id) {
+  static async todoId(req, res, next, todoId) {
     try {
-      const todo = await Todo.findById(id).exec();
+      const todo = await Todo.findById(todoId).exec();
       if (todo) {
-        req.paramId = id;
+        req.paramId = todoId;
         req.todo = todo;
         return next();
       }
@@ -116,5 +116,44 @@ export default class Todos {
    */
   static async get(req, res) {
     return res.status(200).json(req.todo);
+  }
+
+  /**
+   * Update one resource
+   * @param {Object} req - request parameter
+   * @param {Object} res - response parameter
+   * @param {function} next The callback to the next program handler
+   * @returns {Object} - returned response object
+   */
+  static async update(req, res, next) {
+    const { title, description, completed } = req.body;
+    const validator = Todo.validateUpdate(req.body);
+    if (validator.passes()) {
+      try {
+        const fieldsValues = { title, description, completed };
+        const fieldsToUpdate = {};
+        Object.entries(fieldsValues).forEach(([key, value]) => {
+          if (value) {
+            fieldsToUpdate[key] = value;
+          }
+        });
+        if (Object.keys(fieldsToUpdate).length === 0) {
+          return res.status(400).json({
+            message:
+              'At least of of title, description and completed must be sent with this request',
+          });
+        }
+        req.todo.set(fieldsToUpdate);
+        const savedTodo = await req.todo.save();
+        return res.status(200).json(savedTodo);
+      } catch (error) {
+        return next(error);
+      }
+    } else {
+      return res.status(400).json({
+        message: 'There are problems with your input',
+        errors: validator.errors.all(),
+      });
+    }
   }
 }

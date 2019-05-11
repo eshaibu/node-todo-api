@@ -12,8 +12,8 @@ const TodoSchema = new Schema(
       required: true,
     },
     completed: {
-      type: Date,
-      Default: null,
+      type: Boolean,
+      Default: false,
     },
   },
   {
@@ -43,7 +43,7 @@ TodoSchema.statics.validateUpdate = (obj) => {
   const rules = {
     title: 'between:1,199',
     description: 'between:1,599',
-    completed: 'date',
+    completed: 'boolean',
   };
   return new Validator(obj, rules);
 };
