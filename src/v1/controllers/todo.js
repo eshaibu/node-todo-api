@@ -92,7 +92,7 @@ export default class Todos {
 
       const [queryResult, totalCount] = await Promise.all([
         todoQuery.exec(),
-        Todo.estimatedDocumentCount().exec(),
+        Todo.countDocuments({ completed: completedStateCheck }).exec(),
       ]);
 
       const paginationMeta = {
