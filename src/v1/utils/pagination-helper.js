@@ -5,7 +5,7 @@ const paginationHelper = (limit, page, sortBy, sortOrder) => {
 
   const paginationOffset = paginationLimit * paginationPage;
 
-  const sortField = ['title', 'description', 'created_at'].includes(sortBy) ? sortBy : 'createdAt';
+  const sortField = ['title', 'created_at'].includes(sortBy) ? sortBy : 'createdAt';
   const paginationOrder = sortOrder && sortOrder.toLowerCase() === 'asc'
     ? { [sortField || 'createdAt']: 'asc' }
     : { [sortField || 'createdAt']: 'desc' };

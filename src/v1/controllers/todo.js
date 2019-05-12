@@ -174,6 +174,7 @@ export default class Todos {
       await req.todo.deleteOne();
       return res.status(200).json({
         message: 'Todo item successfully deleted',
+        _id: req.paramId,
       });
     } catch (error) {
       return next(error);
