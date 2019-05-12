@@ -1,6 +1,11 @@
 import mongoose, { Schema } from 'mongoose';
 import Validator from 'validatorjs';
 
+const characterLengthMessages = {
+  'between.title': 'The title field must be less than 200 characters',
+  'between.description': 'The description field must be less than 600 characters',
+};
+
 const TodoSchema = new Schema(
   {
     title: {
@@ -31,7 +36,7 @@ TodoSchema.statics.validateCreate = (obj) => {
     title: 'required|between:1,199',
     description: 'required|between:1,599',
   };
-  return new Validator(obj, rules);
+  return new Validator(obj, rules, characterLengthMessages);
 };
 
 /**
@@ -45,7 +50,7 @@ TodoSchema.statics.validateUpdate = (obj) => {
     description: 'between:1,599',
     completed: 'boolean',
   };
-  return new Validator(obj, rules);
+  return new Validator(obj, rules, characterLengthMessages);
 };
 
 export default mongoose.model('Todo', TodoSchema);
