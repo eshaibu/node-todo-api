@@ -72,7 +72,7 @@ export default class Todos {
    */
   static async list(req, res, next) {
     try {
-      const { limit, page, sortBy, sortOrder } = req.query;
+      const { limit, page, sortBy, sortOrder, completedStatus } = req.query;
       const {
         paginationPage,
         paginationLimit,
@@ -80,7 +80,11 @@ export default class Todos {
         paginationOrder,
       } = paginationHelper(parseInt(limit, 10), parseInt(page, 10), sortBy, sortOrder);
 
-      const todoQuery = Todo.find()
+      let completedStateCheck = completedStatus || false;
+      if (typeof completedStatus === 'string') {
+        completedStateCheck = completedStatus.toLowerCase() === 'true';
+      }
+      const todoQuery = Todo.find({ completed: completedStateCheck })
         .collation({ locale: 'en' })
         .sort(paginationOrder)
         .skip(paginationOffset)
@@ -97,6 +101,7 @@ export default class Todos {
         totalCount,
         outputCount: queryResult.length,
         pageSize: paginationLimit,
+        completedStatus: completedStateCheck,
       };
 
       return res.status(200).json({
@@ -133,7 +138,7 @@ export default class Todos {
         const fieldsValues = { title, description, completed };
         const fieldsToUpdate = {};
         Object.entries(fieldsValues).forEach(([key, value]) => {
-          if (value) {
+          if (value || (key === 'completed' && value === false)) {
             fieldsToUpdate[key] = value;
           }
         });
