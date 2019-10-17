@@ -13,6 +13,7 @@
     "comma-dangle": ["error", "always-multiline"],
     "consistent-return": "off",
     "object-curly-newline": "off",
+    "no-unused-vars": "warn",
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "valid-jsdoc": ["warn" , {
       "requireReturn": true,
